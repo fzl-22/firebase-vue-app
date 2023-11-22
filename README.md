@@ -4,6 +4,7 @@
 | -- | -- |
 | NIM | 1203210101 |
 | Kelas | IF-01-03 |
+| URL Github | https://github.com/fzl-22/firebase-vue-app |
 
 ## 1 Firebase
 
@@ -142,7 +143,114 @@ Setelah itu, import plugin `VueFire` dan `VueFireFirestoreOptionsAPI` di `src/ma
 
 ![](./assets/screenshots/main.js.png)
 
-Dengan ini, aplikasi web Vue dan Firebase project telah terhubung dan backend dari Firebase siap digunakan oleh Vue.
+Dengan ini, konfigurasi Firebase telah selesai. Kemudian, akan dicoba untuk menggunakan Cloud Firestore yang sebelumnya telah diaktifkan. Tambahkan import berikut di awal file:
 
+```js
+import { getFirestore, collection } from 'firebase/firestore';
+```
 
+Kemudian, buat instance database Cloud Firestore dengan konfigurasi dan referensi ke collection `students`, dengan nama `studentsRef`. Koleksi ini tidak akan dibuat langsung, melainkan hanya ketika ada document yang dibuat di collection tersebut. Letakan pembuatan instance dan reference berikut di akhir file:
 
+```js
+export const db = getFirestore(firebaseApp);
+export const studentsRef = collection(db, 'students');
+```
+
+Kode akhir untuk file `firebase.js` akan seperti gambar di bawah ini.
+
+![](./assets/screenshots/final-firebase.js.png)
+
+Setelah itu, hapus semua code di file `src/components/HelloWorld.js`. Hal yang ditampilkan di komponen ini adalah sebuah `button`, yangmana ketika button ini ditekan maka akan mengirimkan data statis ke Cloud Firestore, yangmana akan langsung diterima (di-retrieve) oleh Vue dan langsung ditampilkan ke pengguna.
+
+Untuk itu, buat `template`-nya sebagai berikut:
+
+```html
+<template>
+  <div class="hello">
+    <button @click="createDocument">Buat Data</button>
+    <div v-if="studentData">
+      <h2>Data Mahasiswa:</h2>
+      <p>Name: {{ studentData.name }}</p>
+      <p>NIM: {{ studentData.nim }}</p>
+    </div>
+  </div>
+</template>
+```
+
+Kemudian, buat `script`-nya. Di dalam `script`, terdapat properti `studentData` yang nilai awalnya `null`. Dideklarasikan juga fungsi `createDocument` untuk membuat dokumen di Cloud Firestore berisi data mahasiswa. Fungsi ini berjalan secara asynchronous. Kemudian, buat fungsi bernama `setupFirestoreListener` yang berguna untuk melakukan *listening* ke Cloud Firestore. Apabila terdapat perubahan data di Cloud Firestore, maka fungsi ini akan mengambil data terbaru dan melakukan assign data tersebut ke properti `studentData`. Proses ini akan menyebabkan update tampilan dikarenakan `template` menggunakan `v-if`.
+
+```js
+<script>
+import { addDoc, onSnapshot } from 'firebase/firestore';
+import { studentsRef } from '@/firebase';
+
+export default {
+  data() {
+    return {
+      studentData: null,
+    };
+  },
+  methods: {
+    async createDocument() {
+      const newDocument = { name: "Ahmad Mu'min Faisal", nim: '1203210101' };
+
+      await addDoc(studentsRef, newDocument);
+    },
+    setupFirestoreListener() {
+      onSnapshot(studentsRef, (querySnapshot) => {
+        const retrievedData = querySnapshot.docs[0]?.data();
+        this.studentData = retrievedData;
+      });
+    },
+  },
+  mounted() {
+    this.setupFirestoreListener();
+  },
+};
+</script>
+```
+
+Setelah itu, berikan styling sederhana untuk menghias `button`.
+
+```css
+<style scoped>
+button {
+  background-color: #42b983;
+  border-width: 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  color: white;
+}
+</style>
+```
+
+File `src/components/HelloWorld.vue` telah selesai dibuat. Sekarang, jalankan project Vue dengan perintah berikut:
+
+```bash
+npm run serve
+```
+
+Setelah itu, aplikasi Vue akan berjalan di http://localhost:8080. Buka URL tersebut di browser, maka akan muncul tampilan sederhana berikut:
+
+![](./assets/screenshots/before-clicked.png)
+
+Apabila tombol tersebut di-klik, maka document dan collection akan dibuat oleh fungsi `createDocument`, kemudian fungsi `setupFirestoreListener` akan mengetahui bahwa terdapat perubahan di Cloud Firestore dan memberikan nilai baru ke properti `studentData`. Proses ini akan menyebabkan perubahan tampilan seperti berikut:
+
+![](./assets/screenshots/after-clicked.png)
+
+Berikut adalah isi dari Cloud Firestore sebelum document dibuat:
+
+![](./assets/screenshots/before-firestore.png)
+
+Setelah di-klik, Cloud Firestore akan memiliki document dan collection seperti pada gambar di bawah ini:
+
+![](./assets/screenshots/after-firestore.png)
+
+## Penutup
+
+Demikian adalah penjelasan mengenai Firebase, produk-produk Firebase, dan cara membuat project Firebase beserta cara menghubungkannya dengan aplikasi Vue. Untuk source code, dapat diakses di URL berikut:
+
+[https://github.com/fzl-22/firebase-vue-app](https://github.com/fzl-22/firebase-vue-app)
+
+Terimakasih.
