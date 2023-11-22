@@ -1,4 +1,13 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
+import { VueFire, VueFireFirestoreOptionsAPI } from 'vuefire';
+import { firebaseApp } from './firebase';
 
-createApp(App).mount('#app')
+const app = createApp(App);
+
+app.use(VueFire, {
+  firebaseApp,
+  modules: [VueFireFirestoreOptionsAPI()],
+});
+
+app.mount('#app');

@@ -12,7 +12,8 @@ export default {
     HelloWorld
   }
 }
-</script>
+</script>  modules: [VueFireFirestoreOptionsAPI()],
+
 
 <style>
 #app {
