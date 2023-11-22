@@ -6,6 +6,19 @@
 | Kelas | IF-01-03 |
 | URL Github | https://github.com/fzl-22/firebase-vue-app |
 
+## Daftar Isi
+
+1. [Firebase](#1-firebase)
+2. [Membuat Akun Firebase](#2-membuat-akun-firebase)
+3. [Membuat Project di Firebase](#3-membuat-project-di-firebase)
+   1. [Firebase Authentication](#31-firebase-authentication)
+   2. [Cloud Firestore](#32-cloud-firestore)
+   3. [Firebase Realtime Database](#33-firebase-realtime-database)
+   4. [Cloud Storage for Firebase](#34-cloud-storage-for-firebase)
+   5. [Firebase Hosting](#35-firebase-hosting)
+4. [Menghubungkan Project Vue ke Firebase](#4-menghubungkan-project-vue-ke-firebase)
+5. [Penutup](#penutup)
+
 ## 1 Firebase
 
 ![](./assets/logo/logo-standard.svg)
@@ -247,7 +260,7 @@ Setelah di-klik, Cloud Firestore akan memiliki document dan collection seperti p
 
 ![](./assets/screenshots/after-firestore.png)
 
-## Penutup
+## 5 Penutup
 
 Demikian adalah penjelasan mengenai Firebase, produk-produk Firebase, dan cara membuat project Firebase beserta cara menghubungkannya dengan aplikasi Vue. Untuk source code, dapat diakses di URL berikut:
 
