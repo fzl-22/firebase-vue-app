@@ -18,4 +18,4 @@ export const firebaseApp = initializeApp(firebaseConfig);
 
 export const db = getFirestore(firebaseApp);
 
-export const numbersRef = collection(db, 'numbers');
+export const studentsRef = collection(db, 'students');
